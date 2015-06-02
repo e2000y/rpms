@@ -1,0 +1,24 @@
+From 534642e9d65763b67d73433ebcfaa90de88d76c6 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Tue, 21 Apr 2015 09:33:20 +0200
+Subject: [PATCH] fix build with librabbitmq 0.6.0
+
+---
+ src/amqp.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/src/amqp.c b/src/amqp.c
+index cf2a448..3ba8225 100644
+--- a/src/amqp.c
++++ b/src/amqp.c
+@@ -304,6 +304,10 @@ static int camqp_create_exchange (camqp_config_t *conf) /* {{{ */
+             /* type        = */ amqp_cstring_bytes (conf->exchange_type),
+             /* passive     = */ 0,
+             /* durable     = */ 0,
++#if AMQP_VERSION >= 0x00060000
++            /* auto delete = */ 0,
++            /* internal    = */ 0,
++#endif
+             /* arguments   = */ argument_table);
+     if ((ed_ret == NULL) && camqp_is_error (conf))
+     {
