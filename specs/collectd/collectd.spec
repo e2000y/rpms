@@ -30,9 +30,6 @@ BuildRequires: perl(ExtUtils::Embed)
 BuildRequires: python-devel
 BuildRequires: libgcrypt-devel
 BuildRequires: autoconf automake libtool libtool-ltdl-devel
-Requires(post):   systemd
-Requires(preun):  systemd
-Requires(postun): systemd
 
 %description
 collectd is a small daemon written in C for performance.  It reads various
@@ -409,6 +406,7 @@ autoreconf -vif
 %{__make} install DESTDIR="%{buildroot}"
 
 %{__install} -Dp -m0644 src/collectd.conf %{buildroot}%{_sysconfdir}/collectd.conf
+%{__install} -Dp -m0755 contrib/redhat/init.d-collectd %{buildroot}%{_initrddir}/collectd
 %{__install} -d -m0755 %{buildroot}%{_localstatedir}/lib/collectd/rrd
 %{__install} -d -m0755 %{buildroot}%{_datadir}/collectd/collection3/
 %{__install} -d -m0755 %{buildroot}%{_sysconfdir}/httpd/conf.d/
@@ -466,6 +464,7 @@ rm -f %{buildroot}/%{_libdir}/{collectd/,}*.la
 %files
 %config(noreplace) %{_sysconfdir}/collectd.conf
 %config(noreplace) %{_sysconfdir}/collectd.d/
+%config %{_initrddir}/collectd
 %exclude %{_sysconfdir}/collectd.d/apache.conf
 %exclude %{_sysconfdir}/collectd.d/dns.conf
 %exclude %{_sysconfdir}/collectd.d/email.conf
